@@ -1,0 +1,33 @@
+<div *ngIf="story">
+  <div class="form-group mb-3">
+    <label for="title">Title:</label>
+    <input
+      class="form-control"
+      id="title"
+      [(ngModel)]="story.title"
+      placeholder="Story Title"
+    />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="description">Description:</label>
+    <input
+      class="form-control"
+      id="description"
+      [(ngModel)]="story.description"
+      placeholder="Story Description"
+    />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="status">Status:</label>
+    <input
+      id="email"
+      [(ngModel)]="story.category_id"
+      placeholder="Story Status"
+      class="form-control"
+    />
+  </div>
+
+  <button (click)="save()" class="btn btn-primary">Update Data</button>
+</div>
