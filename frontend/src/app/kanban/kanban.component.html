@@ -1,29 +1,74 @@
 <h2>Stories</h2>
 <ul class="stories list-group list-group-flush">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody *ngFor="let story of stories">
-      <tr>
-        <td>
-          <a routerLink="/story/{{ story.id }}">{{ story.title }}</a>
-        </td>
-        <td>{{ story.stat }}</td>
-        <td>
-          <button
-            class="delete btn"
-            title="delete user"
-            (click)="delete(story)"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- <table class="table"> -->
+  <!--   <thead> -->
+  <!--     <tr> -->
+  <!--       <th>Title</th> -->
+  <!--       <th>Status</th> -->
+  <!--       <th></th> -->
+  <!--     </tr> -->
+  <!--   </thead> -->
+  <!--   <tbody *ngFor="let story of stories"> -->
+  <!--     <tr> -->
+  <!--       <td> -->
+  <!--         <a routerLink="/story/{{ story.id }}">{{ story.title }}</a> -->
+  <!--       </td> -->
+  <!--       <td>{{ story.stat }}</td> -->
+  <!--       <td> -->
+  <!--         <button -->
+  <!--           class="delete btn" -->
+  <!--           title="delete user" -->
+  <!--           (click)="delete(story)" -->
+  <!--         > -->
+  <!--           Delete -->
+  <!--         </button> -->
+  <!--       </td> -->
+  <!--     </tr> -->
+  <!--   </tbody> -->
+  <!-- </table> -->
+  <div class="row">
+    <div class="card col-xs-6" style="width: 18rem">
+      <div class="card-header">Backlog</div>
+      <ul class="list-group list-group-flush" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'backlog'">
+          <li class="list-group-item" routerLink="/story/{{ story.id }}">
+            {{ story.title }}
+          </li>
+        </div>
+      </ul>
+    </div>
+
+    <div class="card col-xs-6" style="width: 18rem">
+      <div class="card-header">To Do</div>
+      <ul class="list-group list-group-flush" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'to do'">
+          <li class="list-group-item" routerLink="/story/{{ story.id }}">
+            {{ story.title }}
+          </li>
+        </div>
+      </ul>
+    </div>
+
+    <div class="card col-xs-6" style="width: 18rem">
+      <div class="card-header">Doing</div>
+      <ul class="list-group list-group-flush" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'doing'">
+          <li class="list-group-item" routerLink="/story/{{ story.id }}">
+            {{ story.title }}
+          </li>
+        </div>
+      </ul>
+    </div>
+
+    <div class="card col-xs-6" style="width: 18rem">
+      <div class="card-header">Done</div>
+      <ul class="list-group list-group-flush" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'done'">
+          <li class="list-group-item" routerLink="/story/{{ story.id }}">
+            {{ story.title }}
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
 </ul>
