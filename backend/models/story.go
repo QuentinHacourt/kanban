@@ -4,5 +4,10 @@ type Story struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	CategoryID  int    `json:"category_id"`
+	Status      string `json:"stat"`
+}
+
+type StoryInput struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
