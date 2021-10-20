@@ -3,7 +3,6 @@
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Title</th>
         <th>Status</th>
         <th></th>
@@ -12,9 +11,8 @@
     <tbody *ngFor="let story of stories">
       <tr>
         <td>
-          <a routerLink="/story/{{ story.id }}">{{ story.id }}</a>
+          <a routerLink="/story/{{ story.id }}">{{ story.title }}</a>
         </td>
-        <td>{{ story.title }}</td>
         <td>{{ story.stat }}</td>
         <td>
           <button
@@ -28,13 +26,4 @@
       </tr>
     </tbody>
   </table>
-  <!-- <li *ngFor="let story of stories" class="list-group-item"> -->
-  <!--   {{ story.title }} -->
-  <!--   <!-1- <a routerLink="/detail/{{ story.id }}"> -1-> -->
-  <!--   <!-1-   {{ story.title }} -1-> -->
-  <!--   <!-1- </a> -1-> -->
-  <!--   <!-1- <button class="delete btn" title="delete user" (click)="delete(user)"> -1-> -->
-  <!--   <!-1-   Delete -1-> -->
-  <!--   <!-1- </button> -1-> -->
-  <!-- </li> -->
 </ul>
