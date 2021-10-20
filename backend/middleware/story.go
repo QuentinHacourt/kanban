@@ -18,20 +18,22 @@ func CreateStory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-	var story models.Story
+	var storyInput models.StoryInput
 
-	if err := json.NewDecoder(r.Body).Decode(&story); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&storyInput); err != nil {
 		log.Fatalf("Unable to decode the story in the request body: %v", err)
 	}
 
-	insertID := database.InsertStory(story)
+	insertID := database.InsertStory(storyInput)
 
 	response := models.Response{
 		ID:      insertID,
 		Message: "Story created successfully",
 	}
 
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }
 
 func GetStory(w http.ResponseWriter, r *http.Request) {
@@ -46,13 +48,15 @@ func GetStory(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int: %v", err)
 	}
 
-	contact, err := database.GetStory(int64(id))
+	story, err := database.GetStory(int64(id))
 
 	if err != nil {
-		log.Fatalf("Unable to get contact: %v", err)
+		log.Fatalf("Unable to get Story: %v", err)
 	}
 
-	json.NewEncoder(w).Encode(contact)
+	if err = json.NewEncoder(w).Encode(story); err != nil {
+		log.Printf("Failed to encode story: %v", err)
+	}
 }
 
 func GetAllStories(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +69,10 @@ func GetAllStories(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to get all stories: %v", err)
 	}
 
-	json.NewEncoder(w).Encode(stories)
+	if err = json.NewEncoder(w).Encode(stories); err != nil {
+		log.Printf("Failed to encode stories: %v", err)
+	}
+
 }
 
 func UpdateStory(w http.ResponseWriter, r *http.Request) {
@@ -94,12 +101,14 @@ func UpdateStory(w http.ResponseWriter, r *http.Request) {
 
 	msg := fmt.Sprintf("Story updated successfully. Total rows/record affected %v", updatedRows)
 
-	res := models.Response{
+	response := models.Response{
 		ID:      int64(story.ID),
 		Message: msg,
 	}
 
-	json.NewEncoder(w).Encode(res)
+	if err = json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }
 
 func DeleteStory(w http.ResponseWriter, r *http.Request) {
@@ -125,5 +134,7 @@ func DeleteStory(w http.ResponseWriter, r *http.Request) {
 		Message: msg,
 	}
 
-	json.NewEncoder(w).Encode(res)
+	if err = json.NewEncoder(w).Encode(res); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }

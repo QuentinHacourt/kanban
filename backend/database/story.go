@@ -7,20 +7,23 @@ import (
 	"log"
 )
 
-func InsertStory(story models.Story) int64 {
+func InsertStory(storyInput models.StoryInput) int64 {
 	db := createConnection()
 
 	defer db.Close()
 
-	sqlStatement := `INSERT INTO stories (title, description, category_id) VALUES ($1, $2, $3) RETURNING id`
+	sqlStatement := `
+		INSERT INTO stories(title, description, status_id)
+		VALUES ($1, $2, 4)
+		RETURNING id
+`
 
 	var id int64
 
 	if err := db.QueryRow(
 		sqlStatement,
-		story.Title,
-		story.Description,
-		story.CategoryID,
+		storyInput.Title,
+		storyInput.Description,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new story: %v", err)
 	}
@@ -37,11 +40,15 @@ func GetStory(id int64) (models.Story, error) {
 
 	var story models.Story
 
-	sqlStatement := `SELECT * FROM stories WHERE id=$1`
+	sqlStatement := `
+		SELECT stories.id, stories.title, stories.description, status.name
+		FROM stories join status on status.id = stories.status_id
+		where stories.id = $1;
+`
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.CategoryID)
+	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.Status)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -64,8 +71,8 @@ func GetAllStories() ([]models.Story, error) {
 	var stories []models.Story
 
 	sqlStatement := `
-		SELECT id, title, description, category_id
-		FROM stories
+		SELECT stories.id, stories.title, stories.description, status.name
+		FROM stories join status on status.id = stories.status_id;
 	`
 
 	rows, err := db.Query(sqlStatement)
@@ -79,7 +86,7 @@ func GetAllStories() ([]models.Story, error) {
 	for rows.Next() {
 		var story models.Story
 
-		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.CategoryID)
+		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.Status)
 
 		if err != nil {
 			log.Fatalf("Unable to scan the row: %v", err)
@@ -97,16 +104,23 @@ func UpdateStory(story models.Story) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		UPDATE stories SET title=$2, description=$3, category_id=$4
-		WHERE id=$1
+		WITH get_id AS (
+			SELECT id
+				FROM status
+				WHERE name = $4
+		)
+		UPDATE stories
+		SET
+			title=$2,
+			description=$3,
+			status_id=get_id.id
+		FROM
+			get_id
+		WHERE
+			stories.id = $1;
 	`
 
-	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.CategoryID)
-
-	println(story.ID)
-	println(story.Title)
-	println(story.Description)
-	println(story.CategoryID)
+	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.Status)
 
 	if err != nil {
 		log.Fatalf("Unable to update story: %v", err)

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { Story } from './story';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Story, StoryInput } from './story';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +45,7 @@ export class StoryService {
       .pipe(catchError(this.handleError<Story>('deleteStory')));
   }
 
-  addStory(story: Story): Observable<Story> {
+  addStory(story: StoryInput): Observable<Story> {
     return this.http
       .post<Story>(this.storyUrl, story, this.httpOptions)
       .pipe(catchError(this.handleError<Story>('addStory')));

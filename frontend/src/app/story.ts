@@ -2,5 +2,10 @@ export interface Story {
   id: number;
   title: string;
   description: string;
-  category_id: number;
+  stat: string;
+}
+
+export interface StoryInput {
+  title: string;
+  description: string;
 }
