@@ -95,7 +95,7 @@ func UpdateStory(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode story in the request body: %v", err)
 	}
 
-	story.ID = &id
+	*story.ID = id
 
 	updatedRows := database.UpdateStory(story)
 
