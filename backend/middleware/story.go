@@ -95,14 +95,14 @@ func UpdateStory(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode story in the request body: %v", err)
 	}
 
-	story.ID = id
+	story.ID = &id
 
 	updatedRows := database.UpdateStory(story)
 
 	msg := fmt.Sprintf("Story updated successfully. Total rows/record affected %v", updatedRows)
 
 	response := models.Response{
-		ID:      int64(story.ID),
+		ID:      int64(*story.ID),
 		Message: msg,
 	}
 

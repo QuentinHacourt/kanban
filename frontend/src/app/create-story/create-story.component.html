@@ -14,8 +14,19 @@
     />
   </div>
 
+  <div class="form-group mb-3">
+    <label for="time">Estimated Time:</label>
+    <input
+      class="form-control"
+      id="time"
+      placeholder="Estimated Time"
+      #time
+      type="number"
+    />
+  </div>
+
   <button
-    (click)="addStory(title.value, description.value)"
+    (click)="addStory(title.value, description.value, +time.value)"
     class="btn btn-primary"
   >
     Add Story
