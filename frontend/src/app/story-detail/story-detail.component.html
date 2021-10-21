@@ -22,10 +22,21 @@
   <div class="form-group mb-3">
     <label for="status">Status:</label>
     <input
-      id="email"
+      id="status"
       [(ngModel)]="story.stat"
       placeholder="Story Status"
       class="form-control"
+    />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="time">Estimated Time:</label>
+    <input
+      id="time"
+      [(ngModel)]="story.time"
+      placeholder="Story Estimated Time"
+      class="form-control"
+      type="number"
     />
   </div>
 

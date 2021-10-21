@@ -12,13 +12,14 @@ export class CreateStoryComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  addStory(title: string, description: string): void {
-    if (!title || !description) {
+  addStory(title: string, description: string, time: number): void {
+    if (!title || !description || !time) {
       return;
     }
     const storyInput: StoryInput = {
       title: title,
       description: description,
+      time: time,
     };
     this.storyService.addStory(storyInput).subscribe();
   }

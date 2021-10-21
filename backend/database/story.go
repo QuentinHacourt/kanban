@@ -13,10 +13,10 @@ func InsertStory(storyInput models.StoryInput) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		INSERT INTO stories(title, description, status_id)
-		VALUES ($1, $2, 4)
+		INSERT INTO stories(title, description, status_id, estimated_time)
+		VALUES ($1, $2, 4, $3)
 		RETURNING id
-`
+	`
 
 	var id int64
 
@@ -24,6 +24,7 @@ func InsertStory(storyInput models.StoryInput) int64 {
 		sqlStatement,
 		storyInput.Title,
 		storyInput.Description,
+		storyInput.Time,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new story: %v", err)
 	}
@@ -41,14 +42,14 @@ func GetStory(id int64) (models.Story, error) {
 	var story models.Story
 
 	sqlStatement := `
-		SELECT stories.id, stories.title, stories.description, status.name
+		SELECT stories.id, stories.title, stories.description, status.name, estimated_time
 		FROM stories join status on status.id = stories.status_id
 		where stories.id = $1;
 `
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.Status)
+	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -71,7 +72,7 @@ func GetAllStories() ([]models.Story, error) {
 	var stories []models.Story
 
 	sqlStatement := `
-		SELECT stories.id, stories.title, stories.description, status.name
+		SELECT stories.id, stories.title, stories.description, status.name, stories.estimated_time
 		FROM stories join status on status.id = stories.status_id;
 	`
 
@@ -86,7 +87,7 @@ func GetAllStories() ([]models.Story, error) {
 	for rows.Next() {
 		var story models.Story
 
-		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.Status)
+		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time)
 
 		if err != nil {
 			log.Fatalf("Unable to scan the row: %v", err)
@@ -113,14 +114,15 @@ func UpdateStory(story models.Story) int64 {
 		SET
 			title=$2,
 			description=$3,
-			status_id=get_id.id
+			status_id=get_id.id,
+			estimated_time=$5
 		FROM
 			get_id
 		WHERE
 			stories.id = $1;
 	`
 
-	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.Status)
+	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.Status, story.Time)
 
 	if err != nil {
 		log.Fatalf("Unable to update story: %v", err)
