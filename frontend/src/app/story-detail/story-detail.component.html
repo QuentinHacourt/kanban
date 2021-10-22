@@ -40,5 +40,12 @@
     />
   </div>
 
+  <div class="form-group">
+    <label for="sel1">Select list:</label>
+    <select class="form-control" id="sel1">
+      <option *ngFor="let developer of developers">{{ developer.name }}</option>
+    </select>
+  </div>
+
   <button (click)="save()" class="btn btn-primary">Update Data</button>
 </div>

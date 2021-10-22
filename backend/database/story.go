@@ -13,9 +13,10 @@ func InsertStory(storyInput models.StoryInput) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		INSERT INTO stories(title, description, status_id, estimated_time)
-		VALUES ($1, $2, 4, $3)
-		RETURNING id
+		INSERT INTO stories(title, description, status_id, estimated_time, developer_id)
+		SELECT $1, $2, 4, $3, id
+		FROM developers
+		where name = $4;
 	`
 
 	var id int64
@@ -25,6 +26,7 @@ func InsertStory(storyInput models.StoryInput) int64 {
 		storyInput.Title,
 		storyInput.Description,
 		storyInput.Time,
+		storyInput.DeveloperName,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new story: %v", err)
 	}
@@ -42,14 +44,15 @@ func GetStory(id int64) (models.Story, error) {
 	var story models.Story
 
 	sqlStatement := `
-		SELECT stories.id, stories.title, stories.description, status.name, estimated_time
-		FROM stories join status on status.id = stories.status_id
+		select stories.id, stories.title, stories.description, stories.description, status.name, stories.estimated_time, d.name
+		from stories join developers d on stories.developer_id = d.id
+		join status on status.id = stories.status_id
 		where stories.id = $1;
-`
+	`
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time)
+	err := row.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time, &story.DeveloperName)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -72,8 +75,9 @@ func GetAllStories() ([]models.Story, error) {
 	var stories []models.Story
 
 	sqlStatement := `
-		SELECT stories.id, stories.title, stories.description, status.name, stories.estimated_time
-		FROM stories join status on status.id = stories.status_id;
+		select stories.id, stories.title, stories.description, stories.description, status.name, stories.estimated_time, d.name
+		from stories join developers d on stories.developer_id = d.id
+		join status on status.id = stories.status_id;
 	`
 
 	rows, err := db.Query(sqlStatement)
@@ -105,19 +109,21 @@ func UpdateStory(story models.Story) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		WITH get_id AS (
-			SELECT id
-				FROM status
-				WHERE name = $4
+		WITH get_ids AS (
+			SELECT status.id status_id, developers.id developer_id
+			FROM status, developers
+			WHERE status.name = $4
+			AND developers.name = $6
 		)
 		UPDATE stories
 		SET
 			title=$2,
 			description=$3,
-			status_id=get_id.id,
 			estimated_time=$5
+			status_id=get_ids.status_id,
+			developer_id=get_ids.developer_id
 		FROM
-			get_id
+			get_ids
 		WHERE
 			stories.id = $1;
 	`
