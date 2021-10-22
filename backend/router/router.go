@@ -20,6 +20,13 @@ func Router() *mux.Router {
 	router.HandleFunc("/story/{id}", middleware.UpdateStory).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/story/{id}", middleware.DeleteStory).Methods("DELETE", "OPTIONS")
 
+	// developers
+	router.HandleFunc("/developer/{id}", middleware.GetDeveloper).Methods("GET", "OPTIONS")
+	router.HandleFunc("/developer", middleware.GetAllDevelopers).Methods("GET", "OPTIONS")
+	router.HandleFunc("/developer", middleware.CreateDeveloper).Methods("POST", "OPTIONS")
+	router.HandleFunc("/developer/{id}", middleware.UpdateDeveloper).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/developer/{id}", middleware.DeleteDeveloper).Methods("DELETE", "OPTIONS")
+
 	router.Use(mux.CORSMethodMiddleware(router))
 
 	return router

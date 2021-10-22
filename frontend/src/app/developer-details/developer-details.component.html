@@ -1,0 +1,12 @@
+<div *ngIf="developer">
+  <div class="form-group mb-3">
+    <label for="name">Name:</label>
+    <input
+      class="form-control"
+      id="name"
+      [(ngModel)]="developer.name"
+      placeholder="Developer Name"
+    />
+  </div>
+  <button (click)="save()" class="btn btn-primary">Update Data</button>
+</div>
