@@ -12,12 +12,13 @@ export class RegisterDeveloperComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  registerDeveloper(name: string): void {
-    if (!name) {
+  registerDeveloper(user_name: string, password: string): void {
+    if (!user_name) {
       return;
     }
     const developerInput: DeveloperInput = {
-      name: name,
+      user_name: user_name,
+      password: password,
     };
     this.developerService.addDeveloper(developerInput).subscribe();
   }

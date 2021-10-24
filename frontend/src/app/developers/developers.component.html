@@ -2,14 +2,16 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Username</th>
       <th></th>
     </tr>
   </thead>
   <tbody *ngFor="let developer of developers">
     <tr>
       <td>
-        <a routerLink="/developer/{{ developer.id }}">{{ developer.name }}</a>
+        <a routerLink="/developer/{{ developer.id }}">{{
+          developer.user_name
+        }}</a>
       </td>
       <td>
         <button

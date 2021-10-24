@@ -28,7 +28,9 @@
   <div class="form-group">
     <label for="developer">Assign Developer:</label>
     <select class="form-control" id="developer" #developerName>
-      <option *ngFor="let developer of developers">{{ developer.name }}</option>
+      <option *ngFor="let developer of developers">
+        {{ developer.user_name }}
+      </option>
     </select>
   </div>
 
