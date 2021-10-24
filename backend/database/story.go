@@ -16,7 +16,7 @@ func InsertStory(storyInput models.StoryInput) int64 {
 		INSERT INTO stories(title, description, status_id, estimated_time, developer_id)
 		SELECT $1, $2, 4, $3, id
 		FROM developers
-		where name = $4;
+		where developer_name = $4;
 	`
 
 	var id int64
@@ -44,7 +44,7 @@ func GetStory(id int64) (models.Story, error) {
 	var story models.Story
 
 	sqlStatement := `
-		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.name
+		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.user_name
 		from stories left outer join developers d on stories.developer_id = d.id
 		join status on status.id = stories.status_id
 		where stories.id = $1;
@@ -75,7 +75,7 @@ func GetAllStories() ([]models.Story, error) {
 	var stories []models.Story
 
 	sqlStatement := `
-		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.name
+		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.user_name
 		from stories left outer join developers d on stories.developer_id = d.id
 		join status on status.id = stories.status_id;
 	`
@@ -83,7 +83,7 @@ func GetAllStories() ([]models.Story, error) {
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Fatalf("Unable to execute the query: %v", err)
+		log.Fatalf("Unable to get all stories: %v", err)
 	}
 
 	defer rows.Close()
@@ -113,7 +113,7 @@ func UpdateStory(story models.Story) int64 {
 			SELECT status.id status_id, developers.id developer_id
 			FROM status, developers
 			WHERE status.name = $4
-			AND developers.name = $6
+			AND developers.user_name = $6
 		)
 		UPDATE stories
 		SET

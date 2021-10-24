@@ -13,8 +13,8 @@ func InsertDeveloper(developerInput models.DeveloperInput) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		INSERT INTO developers(name)
-		VALUES ($1)
+		INSERT INTO developers(user_name, password)
+		VALUES ($1, $2)
 		RETURNING id
 	`
 
@@ -22,7 +22,8 @@ func InsertDeveloper(developerInput models.DeveloperInput) int64 {
 
 	if err := db.QueryRow(
 		sqlStatement,
-		developerInput.Name,
+		developerInput.UserName,
+		developerInput.Password,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new developer: %v", err)
 	}
@@ -40,14 +41,14 @@ func GetDeveloper(id int64) (models.Developer, error) {
 	var developer models.Developer
 
 	sqlStatement := `
-		SELECT id, name
+		SELECT id, user_name, password
 		FROM developers
 		where id = $1;
 `
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&developer.ID, &developer.Name)
+	err := row.Scan(&developer.ID, &developer.UserName, &developer.Password)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -70,14 +71,14 @@ func GetAllDevelopers() ([]models.Developer, error) {
 	var developers []models.Developer
 
 	sqlStatement := `
-		SELECT id, name
+		SELECT id, user_name, password
 		FROM developers
 	`
 
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Fatalf("Unable to execute the query: %v", err)
+		log.Fatalf("Unable to get all developers: %v", err)
 	}
 
 	defer rows.Close()
@@ -85,7 +86,7 @@ func GetAllDevelopers() ([]models.Developer, error) {
 	for rows.Next() {
 		var developer models.Developer
 
-		err = rows.Scan(&developer.ID, &developer.Name)
+		err = rows.Scan(&developer.ID, &developer.UserName, &developer.Password)
 
 		if err != nil {
 			log.Fatalf("Unable to scan the row: %v", err)
@@ -105,12 +106,13 @@ func UpdateDeveloper(developer models.Developer) int64 {
 	sqlStatement := `
 		UPDATE developers
 		SET
-			name=$2
+			user_name=$2,
+			password=$3
 		WHERE
 			id = $1;
 	`
 
-	res, err := db.Exec(sqlStatement, developer.ID, developer.Name)
+	res, err := db.Exec(sqlStatement, developer.ID, developer.UserName, developer.Password)
 
 	if err != nil {
 		log.Fatalf("Unable to update developer: %v", err)

@@ -1,8 +1,10 @@
 export interface Developer {
   id: number;
-  name: string;
+  user_name: string;
+  password: string;
 }
 
 export interface DeveloperInput {
-  name: string;
+  user_name: string;
+  password: string;
 }

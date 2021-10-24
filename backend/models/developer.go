@@ -1,10 +1,12 @@
 package models
 
 type Developer struct {
-	ID   *int    `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	ID       *int    `json:"id,omitempty"`
+	UserName *string `json:"user_name,omitempty"`
+	Password *string `json:"password,omitempty"`
 }
 
 type DeveloperInput struct {
-	Name *string `json:"name,omitempty"`
+	UserName *string `json:"user_name,omitempty"`
+	Password *string `json:"password,omitempty"`
 }

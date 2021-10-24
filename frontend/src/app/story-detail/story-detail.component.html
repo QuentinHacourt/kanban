@@ -47,7 +47,9 @@
       id="developer"
       [(ngModel)]="story.developer_name"
     >
-      <option *ngFor="let developer of developers">{{ developer.name }}</option>
+      <option *ngFor="let developer of developers">
+        {{ developer.user_name }}
+      </option>
     </select>
   </div>
 
