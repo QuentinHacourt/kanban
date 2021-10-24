@@ -40,5 +40,16 @@
     />
   </div>
 
+  <div class="form-group">
+    <label for="developer">Assign Developer:</label>
+    <select
+      class="form-control"
+      id="developer"
+      [(ngModel)]="story.developer_name"
+    >
+      <option *ngFor="let developer of developers">{{ developer.name }}</option>
+    </select>
+  </div>
+
   <button (click)="save()" class="btn btn-primary">Update Data</button>
 </div>
