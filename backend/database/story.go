@@ -44,8 +44,8 @@ func GetStory(id int64) (models.Story, error) {
 	var story models.Story
 
 	sqlStatement := `
-		select stories.id, stories.title, stories.description, stories.description, status.name, stories.estimated_time, d.name
-		from stories join developers d on stories.developer_id = d.id
+		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.name
+		from stories left outer join developers d on stories.developer_id = d.id
 		join status on status.id = stories.status_id
 		where stories.id = $1;
 	`
@@ -75,8 +75,8 @@ func GetAllStories() ([]models.Story, error) {
 	var stories []models.Story
 
 	sqlStatement := `
-		select stories.id, stories.title, stories.description, stories.description, status.name, stories.estimated_time, d.name
-		from stories join developers d on stories.developer_id = d.id
+		select stories.id, stories.title, stories.description, status.name, stories.estimated_time, d.name
+		from stories left outer join developers d on stories.developer_id = d.id
 		join status on status.id = stories.status_id;
 	`
 
@@ -91,7 +91,7 @@ func GetAllStories() ([]models.Story, error) {
 	for rows.Next() {
 		var story models.Story
 
-		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time)
+		err = rows.Scan(&story.ID, &story.Title, &story.Description, &story.Status, &story.Time, &story.DeveloperName)
 
 		if err != nil {
 			log.Fatalf("Unable to scan the row: %v", err)
@@ -119,7 +119,7 @@ func UpdateStory(story models.Story) int64 {
 		SET
 			title=$2,
 			description=$3,
-			estimated_time=$5
+			estimated_time=$5,
 			status_id=get_ids.status_id,
 			developer_id=get_ids.developer_id
 		FROM
@@ -128,7 +128,7 @@ func UpdateStory(story models.Story) int64 {
 			stories.id = $1;
 	`
 
-	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.Status, story.Time)
+	res, err := db.Exec(sqlStatement, story.ID, story.Title, story.Description, story.Status, story.Time, story.DeveloperName)
 
 	if err != nil {
 		log.Fatalf("Unable to update story: %v", err)
