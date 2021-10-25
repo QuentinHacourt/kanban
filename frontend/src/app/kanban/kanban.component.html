@@ -1,46 +1,99 @@
 <h2>Stories</h2>
-<div class="row">
-  <div class="card col-xs-6" style="width: 18rem">
-    <div class="card-header">Backlog</div>
-    <ul class="list-group list-group-flush" *ngFor="let story of stories">
-      <div *ngIf="story.stat == 'backlog'">
-        <li class="list-group-item" routerLink="/story/{{ story.id }}">
-          {{ story.title }}
-        </li>
-      </div>
-    </ul>
-  </div>
 
-  <div class="card col-xs-6" style="width: 18rem">
-    <div class="card-header">To Do</div>
-    <ul class="list-group list-group-flush" *ngFor="let story of stories">
-      <div *ngIf="story.stat == 'to do'">
-        <li class="list-group-item" routerLink="/story/{{ story.id }}">
-          {{ story.title }}
-        </li>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3>Backlog</h3>
+      <div class="list-group" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'backlog'">
+          <a
+            routerLink="/story/{{ story.id }}"
+            class="
+              list-group-item
+              d-flex
+              justify-content-between
+              align-items-start
+              my-1
+            "
+          >
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ story.title }}</div>
+              {{ story.developer_name }}
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ story.time }}</span>
+          </a>
+        </div>
       </div>
-    </ul>
-  </div>
+    </div>
 
-  <div class="card col-xs-6" style="width: 18rem">
-    <div class="card-header">Doing</div>
-    <ul class="list-group list-group-flush" *ngFor="let story of stories">
-      <div *ngIf="story.stat == 'doing'">
-        <li class="list-group-item" routerLink="/story/{{ story.id }}">
-          {{ story.title }}
-        </li>
+    <div class="col">
+      <h3>To Do</h3>
+      <div class="list-group" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'to do'">
+          <a
+            routerLink="/story/{{ story.id }}"
+            class="
+              list-group-item
+              d-flex
+              justify-content-between
+              align-items-start
+              my-1
+            "
+          >
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ story.title }}</div>
+              {{ story.developer_name }}
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ story.time }}</span>
+          </a>
+        </div>
       </div>
-    </ul>
-  </div>
-
-  <div class="card col-xs-6" style="width: 18rem">
-    <div class="card-header">Done</div>
-    <ul class="list-group list-group-flush" *ngFor="let story of stories">
-      <div *ngIf="story.stat == 'done'">
-        <li class="list-group-item" routerLink="/story/{{ story.id }}">
-          {{ story.title }}
-        </li>
+    </div>
+    <div class="col">
+      <h3>Doing</h3>
+      <div class="list-group" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'doing'">
+          <a
+            routerLink="/story/{{ story.id }}"
+            class="
+              list-group-item
+              d-flex
+              justify-content-between
+              align-items-start
+              my-1
+            "
+          >
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ story.title }}</div>
+              {{ story.developer_name }}
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ story.time }}</span>
+          </a>
+        </div>
       </div>
-    </ul>
+    </div>
+    <div class="col">
+      <h3>Done</h3>
+      <div class="list-group" *ngFor="let story of stories">
+        <div *ngIf="story.stat == 'done'">
+          <a
+            routerLink="/story/{{ story.id }}"
+            class="
+              list-group-item
+              d-flex
+              justify-content-between
+              align-items-start
+              my-1
+            "
+          >
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ story.title }}</div>
+              {{ story.developer_name }}
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ story.time }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
