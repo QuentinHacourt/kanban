@@ -42,7 +42,7 @@ func GetProject(id int64) (models.Project, error) {
 
 	sqlStatement := `
 		SELECT id, title, description
-		FROM project
+		FROM projects
 		where id = $1;
 `
 
@@ -78,7 +78,7 @@ func GetAllProjects() ([]models.Project, error) {
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Fatalf("Unable to get all project: %v", err)
+		log.Fatalf("Unable to get all projects: %v", err)
 	}
 
 	defer rows.Close()
