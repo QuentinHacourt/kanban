@@ -17,7 +17,7 @@ export class CreateStoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDevelopers();
+    this.getStories();
   }
 
   addStory(
@@ -38,7 +38,7 @@ export class CreateStoryComponent implements OnInit {
     this.storyService.addStory(storyInput).subscribe();
   }
 
-  getDevelopers(): void {
+  getStories(): void {
     this.developerService
       .getDevelopers()
       .subscribe((developers) => (this.developers = developers));

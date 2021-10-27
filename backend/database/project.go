@@ -109,7 +109,7 @@ func UpdateProject(project models.Project) int64 {
 			title=$2,
 			description=$3
 		WHERE
-			id = $1;
+			id =$1
 	`
 
 	res, err := db.Exec(sqlStatement, project.ID, project.Title, project.Description)

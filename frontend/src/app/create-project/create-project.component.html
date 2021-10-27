@@ -1,0 +1,23 @@
+<div>
+  <div class="form-group mb-3">
+    <label for="title">Title:</label>
+    <input class="form-control" id="title" placeholder="Project Title" #title />
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="description">Description:</label>
+    <input
+      class="form-control"
+      id="description"
+      placeholder="Story Description"
+      #description
+    />
+  </div>
+
+  <button
+    (click)="addProject(title.value, description.value)"
+    class="btn btn-primary"
+  >
+    Add Story
+  </button>
+</div>
