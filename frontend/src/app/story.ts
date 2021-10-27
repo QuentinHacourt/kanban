@@ -5,6 +5,7 @@ export interface Story {
   stat: string;
   time: number;
   developer_name: string;
+  project_name: string;
 }
 
 export interface StoryInput {
@@ -12,4 +13,5 @@ export interface StoryInput {
   description: string;
   time: number;
   developer_name: string;
+  project_name: string;
 }

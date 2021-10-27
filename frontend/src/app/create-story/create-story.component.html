@@ -34,9 +34,24 @@
     </select>
   </div>
 
+  <div class="form-group">
+    <label for="project">Assign Project:</label>
+    <select class="form-control" id="developer" #projectName>
+      <option *ngFor="let project of projects">
+        {{ project.title }}
+      </option>
+    </select>
+  </div>
+
   <button
     (click)="
-      addStory(title.value, description.value, +time.value, developerName.value)
+      addStory(
+        title.value,
+        description.value,
+        +time.value,
+        developerName.value,
+        projectName.value
+      )
     "
     class="btn btn-primary"
   >
