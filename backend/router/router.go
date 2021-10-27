@@ -27,6 +27,14 @@ func Router() *mux.Router {
 	router.HandleFunc("/developer/{id}", middleware.UpdateDeveloper).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/developer/{id}", middleware.DeleteDeveloper).Methods("DELETE", "OPTIONS")
 
+	// projecs
+	router.HandleFunc("/project/{id}", middleware.GetProject).Methods("GET", "OPTIONS")
+	router.HandleFunc("/project", middleware.GetAllProjects).Methods("GET", "OPTIONS")
+	router.HandleFunc("/project", middleware.CreateProject).Methods("POST", "OPTIONS")
+	router.HandleFunc("/project/{id}", middleware.UpdateProject).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/project/{id}", middleware.DeleteProject).Methods("DELETE", "OPTIONS")
+
+	// Allow CORS
 	router.Use(mux.CORSMethodMiddleware(router))
 
 	return router

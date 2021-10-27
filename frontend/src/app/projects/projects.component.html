@@ -1,0 +1,25 @@
+<h2>Developers</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>title</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let project of projects">
+    <tr>
+      <td>
+        <a routerLink="/project/{{ project.id }}">{{ project.title }}</a>
+      </td>
+      <td>
+        <button
+          class="delete btn"
+          title="delete developer"
+          (click)="delete(project)"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
