@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Developer } from '../developer';
 import { DeveloperService } from '../developer.service';
+import { Project } from '../project';
+import { ProjectService } from '../project.service';
 import { StoryInput } from '../story';
 import { StoryService } from '../story.service';
 
@@ -11,22 +13,26 @@ import { StoryService } from '../story.service';
 })
 export class CreateStoryComponent implements OnInit {
   developers: Developer[] = [];
+  projects: Project[] = [];
+
   constructor(
     private storyService: StoryService,
-    private developerService: DeveloperService
+    private developerService: DeveloperService,
+    private projectService: ProjectService
   ) {}
 
   ngOnInit(): void {
-    this.getStories();
+    this.getDevelopers();
   }
 
   addStory(
     title: string,
     description: string,
     time: number,
-    developerName: string
+    developerName: string,
+    projectName: string
   ): void {
-    if (!title || !description || !time || !developerName) {
+    if (!title || !description || !time || !developerName || !projectName) {
       return;
     }
     const storyInput: StoryInput = {
@@ -34,13 +40,20 @@ export class CreateStoryComponent implements OnInit {
       description: description,
       time: time,
       developer_name: developerName,
+      project_name: projectName,
     };
     this.storyService.addStory(storyInput).subscribe();
   }
 
-  getStories(): void {
+  getDevelopers(): void {
     this.developerService
       .getDevelopers()
       .subscribe((developers) => (this.developers = developers));
+  }
+
+  getProjects(): void {
+    this.projectService
+      .getProjects()
+      .subscribe((projects) => (this.projects = projects));
   }
 }

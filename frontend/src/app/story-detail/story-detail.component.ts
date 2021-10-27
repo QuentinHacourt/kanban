@@ -5,6 +5,8 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DeveloperService } from '../developer.service';
 import { Developer } from '../developer';
+import { Project } from '../project';
+import { ProjectService } from '../project.service';
 
 @Component({
   selector: 'app-story-detail',
@@ -14,17 +16,20 @@ import { Developer } from '../developer';
 export class StoryDetailComponent implements OnInit {
   story: Story | undefined;
   developers: Developer[] = [];
+  projects: Project[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private storyService: StoryService,
     private developerService: DeveloperService,
+    private projectService: ProjectService,
     private location: Location
   ) {}
 
   ngOnInit(): void {
     this.getStory();
     this.getDevelopers();
+    this.getProjects();
   }
 
   getStory(): void {
@@ -36,6 +41,12 @@ export class StoryDetailComponent implements OnInit {
     this.developerService
       .getDevelopers()
       .subscribe((developers) => (this.developers = developers));
+  }
+
+  getProjects(): void {
+    this.projectService
+      .getProjects()
+      .subscribe((projects) => (this.projects = projects));
   }
 
   goBack(): void {

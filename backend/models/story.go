@@ -7,11 +7,13 @@ type Story struct {
 	Status        *string `json:"stat,omitempty"`
 	Time          *int    `json:"time,omitempty"`
 	DeveloperName *string `json:"developer_name,omitempty"`
+	ProjectName   *string `json:"project_name,omitempty"`
 }
 
 type StoryInput struct {
-	Title         string `json:"title"`
-	Description   string `json:"description"`
-	Time          int    `json:"time"`
-	DeveloperName string `json:"developer_name,omitempty"`
+	Title         string  `json:"title"`
+	Description   string  `json:"description"`
+	Time          int     `json:"time"`
+	DeveloperName string  `json:"developer_name,omitempty"`
+	ProjectName   *string `json:"project_name,omitempty"`
 }
