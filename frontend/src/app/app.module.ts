@@ -14,9 +14,12 @@ import { DevelopersComponent } from './developers/developers.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
+import { TeamsComponent } from './teams/teams.component';
+import { TeamDetailsComponent } from './team-details/team-details.component';
+import { CreateTeamComponent } from './create-team/create-team.component';
 
 @NgModule({
-  declarations: [AppComponent, KanbanComponent, StoryDetailComponent, CreateStoryComponent, RegisterDeveloperComponent, DeveloperDetailsComponent, DevelopersComponent, ProjectsComponent, ProjectDetailsComponent, CreateProjectComponent],
+  declarations: [AppComponent, KanbanComponent, StoryDetailComponent, CreateStoryComponent, RegisterDeveloperComponent, DeveloperDetailsComponent, DevelopersComponent, ProjectsComponent, ProjectDetailsComponent, CreateProjectComponent, TeamsComponent, TeamDetailsComponent, CreateTeamComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,4 +1,4 @@
-<h2>Projects</h2>
+<h2>Teams</h2>
 <table class="table">
   <thead>
     <tr>
@@ -6,16 +6,16 @@
       <th></th>
     </tr>
   </thead>
-  <tbody *ngFor="let project of projects">
+  <tbody *ngFor="let team of teams">
     <tr>
       <td>
-        <a routerLink="/project/{{ project.id }}">{{ project.title }}</a>
+        <a routerLink="/team/{{ team.id }}">{{ team.name }}</a>
       </td>
       <td>
         <button
           class="delete btn"
           title="delete developer"
-          (click)="delete(project)"
+          (click)="delete(team)"
         >
           Delete
         </button>

@@ -1,0 +1,13 @@
+<div *ngIf="team">
+  <div class="form-group mb-3">
+    <label for="title">Title:</label>
+    <input
+      class="form-control"
+      id="title"
+      [(ngModel)]="team.name"
+      placeholder="Team Title"
+    />
+  </div>
+
+  <button (click)="save()" class="btn btn-primary">Update Data</button>
+</div>
