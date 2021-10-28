@@ -14,7 +14,9 @@ func InsertProject(projectInput models.ProjectInput) int64 {
 
 	sqlStatement := `
 		INSERT INTO projects(title, description)
-		VALUES ($1, $2)
+		SELECT $1, $2, t.id
+		FROM teams t
+		WHERE name = $3
 		RETURNING id
 	`
 
@@ -24,6 +26,7 @@ func InsertProject(projectInput models.ProjectInput) int64 {
 		sqlStatement,
 		projectInput.Title,
 		projectInput.Description,
+		projectInput.TeamName,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new project: %v", err)
 	}
@@ -41,8 +44,9 @@ func GetProject(id int64) (models.Project, error) {
 	var project models.Project
 
 	sqlStatement := `
-		SELECT id, title, description
-		FROM projects
+		SELECT p.id, p.title, p.description
+		FROM projects p
+			LEFT OUTER JOIN teams t on p.team_id = t.id
 		where id = $1;
 `
 
@@ -73,6 +77,7 @@ func GetAllProjects() ([]models.Project, error) {
 	sqlStatement := `
 		SELECT id, title, description
 		FROM projects
+			LEFT OUTER JOIN teams t on p.team_id = t.id
 	`
 
 	rows, err := db.Query(sqlStatement)
@@ -104,6 +109,11 @@ func UpdateProject(project models.Project) int64 {
 	defer db.Close()
 
 	sqlStatement := `
+		WITH get_ids AS (
+			SELECT id team_id
+			FROM teams
+			WHERE name = $4
+		)
 		UPDATE projects
 		SET
 			title=$2,
@@ -112,7 +122,7 @@ func UpdateProject(project models.Project) int64 {
 			id =$1
 	`
 
-	res, err := db.Exec(sqlStatement, project.ID, project.Title, project.Description)
+	res, err := db.Exec(sqlStatement, project.ID, project.Title, project.Description, project.TeamName)
 
 	if err != nil {
 		log.Fatalf("Unable to update project: %v", err)
