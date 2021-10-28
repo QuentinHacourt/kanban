@@ -13,8 +13,10 @@ func InsertProject(projectInput models.ProjectInput) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		INSERT INTO projects(title, description)
-		VALUES ($1, $2)
+		INSERT INTO projects(title, description, team_id)
+		SELECT $1, $2, t.id
+		FROM teams t
+		WHERE name = $3
 		RETURNING id
 	`
 
@@ -24,6 +26,7 @@ func InsertProject(projectInput models.ProjectInput) int64 {
 		sqlStatement,
 		projectInput.Title,
 		projectInput.Description,
+		projectInput.TeamName,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new project: %v", err)
 	}
@@ -41,14 +44,15 @@ func GetProject(id int64) (models.Project, error) {
 	var project models.Project
 
 	sqlStatement := `
-		SELECT id, title, description
-		FROM projects
-		where id = $1;
+		SELECT p.id, p.title, p.description, t.name
+		FROM projects p
+			LEFT OUTER JOIN teams t on p.team_id = t.id
+		where p.id = $1;
 `
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&project.ID, &project.Title, &project.Description)
+	err := row.Scan(&project.ID, &project.Title, &project.Description, &project.TeamName)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -71,8 +75,9 @@ func GetAllProjects() ([]models.Project, error) {
 	var projects []models.Project
 
 	sqlStatement := `
-		SELECT id, title, description
-		FROM projects
+		SELECT p.id, p.title, p.description, t.name
+		FROM projects p
+			LEFT OUTER JOIN teams t on p.team_id = t.id
 	`
 
 	rows, err := db.Query(sqlStatement)
@@ -86,7 +91,7 @@ func GetAllProjects() ([]models.Project, error) {
 	for rows.Next() {
 		var project models.Project
 
-		err = rows.Scan(&project.ID, &project.Title, &project.Description)
+		err = rows.Scan(&project.ID, &project.Title, &project.Description, &project.TeamName)
 
 		if err != nil {
 			log.Fatalf("Unable to scan the row: %v", err)
@@ -104,15 +109,23 @@ func UpdateProject(project models.Project) int64 {
 	defer db.Close()
 
 	sqlStatement := `
+		WITH get_ids AS (
+			SELECT id team_id
+			FROM teams
+			WHERE name = $4
+		)
 		UPDATE projects
 		SET
 			title=$2,
-			description=$3
+			description=$3,
+			team_id=get_ids.team_id
+		FROM
+			get_ids
 		WHERE
 			id =$1
 	`
 
-	res, err := db.Exec(sqlStatement, project.ID, project.Title, project.Description)
+	res, err := db.Exec(sqlStatement, project.ID, project.Title, project.Description, project.TeamName)
 
 	if err != nil {
 		log.Fatalf("Unable to update project: %v", err)
