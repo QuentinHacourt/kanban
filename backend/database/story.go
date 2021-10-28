@@ -18,6 +18,7 @@ func InsertStory(storyInput models.StoryInput) int64 {
 		FROM developers d, projects p
 		where d.user_name = $4
 		AND p.title = $5
+		RETURNING stories.id
 	`
 
 	var id int64
@@ -36,6 +37,7 @@ func InsertStory(storyInput models.StoryInput) int64 {
 	fmt.Printf("Inserted a single record with id: %v", id)
 
 	return id
+
 }
 
 func GetStory(id int64) (models.Story, error) {

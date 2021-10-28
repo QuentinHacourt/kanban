@@ -13,8 +13,10 @@ func InsertDeveloper(developerInput models.DeveloperInput) int64 {
 	defer db.Close()
 
 	sqlStatement := `
-		INSERT INTO developers(user_name, password)
-		VALUES ($1, $2)
+		INSERT INTO developers(user_name, password, team_id)
+		SELECT $1, $2, t.id
+		FROM teams t
+		WHERE name = $3
 		RETURNING id
 	`
 
@@ -24,6 +26,7 @@ func InsertDeveloper(developerInput models.DeveloperInput) int64 {
 		sqlStatement,
 		developerInput.UserName,
 		developerInput.Password,
+		developerInput.TeamName,
 	).Scan(&id); err != nil {
 		log.Fatalf("Unable to insert new developer: %v", err)
 	}
