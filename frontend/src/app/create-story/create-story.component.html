@@ -27,7 +27,7 @@
 
   <div class="form-group">
     <label for="developer">Assign Developer:</label>
-    <select class="form-control" id="developer" #developerName>
+    <select class="form-select" id="developer" #developerName>
       <option *ngFor="let developer of developers">
         {{ developer.user_name }}
       </option>
@@ -36,7 +36,7 @@
 
   <div class="form-group">
     <label for="project">Assign Project:</label>
-    <select class="form-control" id="developer" #projectName>
+    <select class="form-select" id="project" #projectName>
       <option *ngFor="let project of projects">
         {{ project.title }}
       </option>

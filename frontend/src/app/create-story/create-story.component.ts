@@ -23,6 +23,7 @@ export class CreateStoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDevelopers();
+    this.getProjects();
   }
 
   addStory(

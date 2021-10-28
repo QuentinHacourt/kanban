@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DeveloperInput } from '../developer';
 import { DeveloperService } from '../developer.service';
+import { Team } from '../team';
+import { TeamService } from '../team.service';
 
 @Component({
   selector: 'app-register-developer',
@@ -8,18 +10,34 @@ import { DeveloperService } from '../developer.service';
   styleUrls: ['./register-developer.component.css'],
 })
 export class RegisterDeveloperComponent implements OnInit {
-  constructor(private developerService: DeveloperService) {}
+  teams: Team[] = [];
 
-  ngOnInit(): void {}
+  constructor(
+    private developerService: DeveloperService,
+    private teamService: TeamService
+  ) {}
 
-  registerDeveloper(user_name: string, password: string): void {
-    if (!user_name) {
+  ngOnInit(): void {
+    this.getTeams();
+  }
+
+  registerDeveloper(
+    user_name: string,
+    password: string,
+    teamName: string
+  ): void {
+    if (!user_name || !password || !teamName) {
       return;
     }
     const developerInput: DeveloperInput = {
       user_name: user_name,
       password: password,
+      team_name: teamName,
     };
     this.developerService.addDeveloper(developerInput).subscribe();
+  }
+
+  getTeams(): void {
+    this.teamService.getTeams().subscribe((teams) => (this.teams = teams));
   }
 }
