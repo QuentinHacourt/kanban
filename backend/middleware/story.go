@@ -13,11 +13,6 @@ import (
 )
 
 func CreateStory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	var storyInput models.StoryInput
 
 	if err := json.NewDecoder(r.Body).Decode(&storyInput); err != nil {
@@ -37,9 +32,6 @@ func CreateStory(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetStory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
@@ -60,9 +52,6 @@ func GetStory(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllStories(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	stories, err := database.GetAllStories()
 
 	if err != nil {
@@ -76,11 +65,6 @@ func GetAllStories(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateStory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
@@ -112,11 +96,6 @@ func UpdateStory(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteStory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
