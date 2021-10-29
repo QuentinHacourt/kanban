@@ -13,11 +13,6 @@ import (
 )
 
 func CreateProject(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	var projectInput models.ProjectInput
 
 	if err := json.NewDecoder(r.Body).Decode(&projectInput); err != nil {
@@ -37,9 +32,6 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetProject(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
@@ -60,9 +52,6 @@ func GetProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllProjects(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	projects, err := database.GetAllProjects()
 
 	if err != nil {
@@ -76,11 +65,6 @@ func GetAllProjects(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProject(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
@@ -112,11 +96,6 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProject(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])

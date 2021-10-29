@@ -9,9 +9,13 @@ import { catchError } from 'rxjs/operators';
 })
 export class StoryService {
   private storyUrl = 'http://localhost:8080/story';
-
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      // 'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Methods': 'POST, GET, DELETE, PUT, OPTIONS',
+      // 'Access-Control-Allow-Headers': '*',
+    }),
   };
 
   constructor(private http: HttpClient) {}

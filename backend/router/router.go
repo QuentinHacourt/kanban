@@ -2,12 +2,16 @@ package router
 
 import (
 	"kanban/middleware"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 func Router() *mux.Router {
 	router := mux.NewRouter()
+
+	// Allow CORS
+	router.Use(middleware.CORS)
 
 	// ===========
 	// =   API   =
@@ -16,7 +20,7 @@ func Router() *mux.Router {
 	// stories
 	router.HandleFunc("/story/{id}", middleware.GetStory).Methods("GET", "OPTIONS")
 	router.HandleFunc("/story", middleware.GetAllStories).Methods("GET", "OPTIONS")
-	router.HandleFunc("/story", middleware.CreateStory).Methods("POST", "OPTIONS")
+	router.HandleFunc("/story", middleware.CreateStory).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/story/{id}", middleware.UpdateStory).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/story/{id}", middleware.DeleteStory).Methods("DELETE", "OPTIONS")
 
@@ -40,9 +44,6 @@ func Router() *mux.Router {
 	router.HandleFunc("/team", middleware.CreateTeam).Methods("POST", "OPTIONS")
 	router.HandleFunc("/team/{id}", middleware.UpdateTeam).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/team/{id}", middleware.DeleteTeam).Methods("DELETE", "OPTIONS")
-
-	// Allow CORS
-	router.Use(mux.CORSMethodMiddleware(router))
 
 	return router
 }
