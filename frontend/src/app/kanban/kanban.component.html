@@ -6,7 +6,7 @@
     <div class="list-group" *ngFor="let story of stories">
       <div *ngIf="story.stat == 'backlog'">
         <a
-          (click)="selectStory(story)"
+          routerLink="/story/{{ story.id }}"
           class="
             list-group-item
             d-flex
@@ -14,10 +14,6 @@
             align-items-start
             my-1
           "
-          data-bs-toggle="offcanvas"
-          href="#offcanvasStoryDetails"
-          role="button"
-          aria-controls="offcanvasStoryDetails"
         >
           <div class="ms-2 me-auto">
             <div class="fw-bold">{{ story.title }}</div>
@@ -34,7 +30,7 @@
     <div class="list-group" *ngFor="let story of stories">
       <div *ngIf="story.stat == 'to do'">
         <a
-          (click)="selectStory(story)"
+          routerLink="/story/{{ story.id }}"
           class="
             list-group-item
             d-flex
@@ -42,10 +38,6 @@
             align-items-start
             my-1
           "
-          data-bs-toggle="offcanvas"
-          href="#offcanvasStoryDetails"
-          role="button"
-          aria-controls="offcanvasStoryDetails"
         >
           <div class="ms-2 me-auto">
             <div class="fw-bold">{{ story.title }}</div>
@@ -61,7 +53,7 @@
     <div class="list-group" *ngFor="let story of stories">
       <div *ngIf="story.stat == 'doing'">
         <a
-          (click)="selectStory(story)"
+          routerLink="/story/{{ story.id }}"
           class="
             list-group-item
             d-flex
@@ -69,10 +61,6 @@
             align-items-start
             my-1
           "
-          data-bs-toggle="offcanvas"
-          href="#offcanvasStoryDetails"
-          role="button"
-          aria-controls="offcanvasStoryDetails"
         >
           <div class="ms-2 me-auto">
             <div class="fw-bold">{{ story.title }}</div>
@@ -88,7 +76,7 @@
     <div class="list-group" *ngFor="let story of stories">
       <div *ngIf="story.stat == 'done'">
         <a
-          (click)="selectStory(story)"
+          routerLink="/story/{{ story.id }}"
           class="
             list-group-item
             d-flex
@@ -96,10 +84,6 @@
             align-items-start
             my-1
           "
-          data-bs-toggle="offcanvas"
-          href="#offcanvasStoryDetails"
-          role="button"
-          aria-controls="offcanvasStoryDetails"
         >
           <div class="ms-2 me-auto">
             <div class="fw-bold">{{ story.title }}</div>
@@ -109,38 +93,5 @@
         </a>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="mt-3 mb-3">
-  <a class="btn btn-primary" routerLink="/create-story">Create Story</a>
-</div>
-
-<!-- <button (click)="selectStory()" class="btn btn-primary">Create New Story</button> -->
-
-<div
-  class="offcanvas offcanvas-end"
-  tabindex="-1"
-  id="offcanvasStoryDetails"
-  aria-labelledby="offcanvasStoryDetailsLabel"
->
-  <div class="offcanvas-header">
-    <h5 id="offcanvasStoryDetailsLabel">{{ selectedStory.title }}</h5>
-    <button
-      type="button"
-      class="btn-close text-reset"
-      data-bs-dismiss="offcanvas"
-      aria-label="Close"
-    ></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>Description: {{ selectedStory.description }}</p>
-    <p>Status: {{ selectedStory.stat }}</p>
-    <p>Estimated Time: {{ selectedStory.time }}</p>
-    <p>Developer Name: {{ selectedStory.developer_name }}</p>
-    <p>Project Title: {{ selectedStory.project_name }}</p>
-    <button class="btn btn-primary" routerLink="/story/{{ selectedStory.id }}">
-      Edit Story
-    </button>
   </div>
 </div>

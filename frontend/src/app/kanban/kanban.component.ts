@@ -9,19 +9,8 @@ import { StoryService } from '../story.service';
 })
 export class KanbanComponent implements OnInit {
   stories: Story[] = [];
-  selectedStory: Story;
 
-  constructor(private storyService: StoryService) {
-    this.selectedStory = {
-      id: 0,
-      title: '',
-      description: '',
-      stat: '',
-      time: 0,
-      developer_name: '',
-      project_name: '',
-    };
-  }
+  constructor(private storyService: StoryService) {}
 
   ngOnInit(): void {
     this.getStories();
@@ -31,10 +20,6 @@ export class KanbanComponent implements OnInit {
     this.storyService
       .getStories()
       .subscribe((stories) => (this.stories = stories));
-  }
-
-  selectStory(story: Story): void {
-    this.selectedStory = story;
   }
 
   delete(story: Story): void {
