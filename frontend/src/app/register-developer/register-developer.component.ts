@@ -10,6 +10,9 @@ import { TeamService } from '../team.service';
   styleUrls: ['./register-developer.component.css'],
 })
 export class RegisterDeveloperComponent implements OnInit {
+  errorMessage: string = '';
+  error: boolean = false;
+  success: boolean = false;
   teams: Team[] = [];
 
   constructor(
@@ -35,6 +38,7 @@ export class RegisterDeveloperComponent implements OnInit {
       team_name: teamName,
     };
     this.developerService.addDeveloper(developerInput).subscribe();
+    this.success = true;
   }
 
   getTeams(): void {

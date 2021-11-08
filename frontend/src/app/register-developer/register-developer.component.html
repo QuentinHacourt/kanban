@@ -1,4 +1,15 @@
 <h1>Register New Developer</h1>
+<div class="alert alert-danger" role="alert" id="error-alert" *ngIf="error">
+  Failed to register new user!
+</div>
+<div
+  class="alert alert-success"
+  role="alert"
+  id="success-alert"
+  *ngIf="success"
+>
+  New developer created successfully
+</div>
 <div>
   <div class="form-group mb-3">
     <label for="username">Username:</label>
