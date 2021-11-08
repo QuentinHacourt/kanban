@@ -19,7 +19,11 @@ func CreateDeveloper(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode the developer in the request body: %v", err)
 	}
 
-	insertID := database.InsertDeveloper(developerInput)
+	insertID, err := database.InsertDeveloper(developerInput)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
 
 	response := models.Response{
 		ID:      insertID,
@@ -37,17 +41,17 @@ func GetDeveloper(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params["id"])
 
 	if err != nil {
-		log.Fatalf("Unable to convert the string into int: %v", err)
+		errorHandler(w, fmt.Errorf("Unable to convert the string into int: %v", err))
 	}
 
 	developer, err := database.GetDeveloper(int64(id))
 
 	if err != nil {
-		log.Fatalf("Unable to get Developer: %v", err)
+		errorHandler(w, err)
 	}
 
 	if err = json.NewEncoder(w).Encode(developer); err != nil {
-		log.Printf("Failed to encode developer: %v", err)
+		errorHandler(w, fmt.Errorf("Failed to encode developer: %v", err))
 	}
 }
 
@@ -55,13 +59,12 @@ func GetAllDevelopers(w http.ResponseWriter, r *http.Request) {
 	developers, err := database.GetAllDevelopers()
 
 	if err != nil {
-		log.Fatalf("Unable to get all developers: %v", err)
+		errorHandler(w, fmt.Errorf("Unable to get all developers: %v", err))
 	}
 
 	if err = json.NewEncoder(w).Encode(developers); err != nil {
-		log.Printf("Failed to encode developers: %v", err)
+		errorHandler(w, fmt.Errorf("Failed to encode developers: %v", err))
 	}
-
 }
 
 func UpdateDeveloper(w http.ResponseWriter, r *http.Request) {
@@ -70,18 +73,21 @@ func UpdateDeveloper(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params["id"])
 
 	if err != nil {
-		log.Fatalf("Unable to convert the strig into int.  %v", err)
+		errorHandler(w, fmt.Errorf("Unable to convert the strig into int.  %v", err))
 	}
 
 	var developer models.Developer
 
 	if err = json.NewDecoder(r.Body).Decode(&developer); err != nil {
-		log.Fatalf("Unable to decode developer in the request body: %v", err)
+		errorHandler(w, fmt.Errorf("Unable to decode developer in the request body: %v", err))
 	}
 
 	*developer.ID = id
 
-	updatedRows := database.UpdateDeveloper(developer)
+	updatedRows, err := database.UpdateDeveloper(developer)
+	if err != nil {
+		errorHandler(w, err)
+	}
 
 	msg := fmt.Sprintf("Developer updated successfully. Total rows/record affected %v", updatedRows)
 
@@ -91,7 +97,7 @@ func UpdateDeveloper(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.NewEncoder(w).Encode(response); err != nil {
-		log.Printf("Failed to encode response: %v", err)
+		errorHandler(w, fmt.Errorf("Failed to encode response: %v", err))
 	}
 }
 
@@ -104,7 +110,10 @@ func DeleteDeveloper(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	deletedRows := database.DeleteDeveloper(int64(id))
+	deletedRows, err := database.DeleteDeveloper(int64(id))
+	if err != nil {
+		errorHandler(w, err)
+	}
 
 	msg := fmt.Sprintf("Developer updated successfully. Total rows/record affected: %v", deletedRows)
 
@@ -114,6 +123,20 @@ func DeleteDeveloper(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.NewEncoder(w).Encode(res); err != nil {
-		log.Printf("Failed to encode response: %v", err)
+		errorHandler(w, fmt.Errorf("Failed to encode response: %v", err))
 	}
+}
+
+func errorHandler(w http.ResponseWriter, err error) {
+	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Set("Content-Type", "application/json")
+	resp := make(map[string]string)
+	resp["message"] = err.Error()
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal: %s", err)
+	}
+	w.Write(jsonResp)
+	return
+
 }

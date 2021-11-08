@@ -4,10 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"kanban/models"
-	"log"
 )
 
-func InsertDeveloper(developerInput models.DeveloperInput) int64 {
+func InsertDeveloper(developerInput models.DeveloperInput) (int64, error) {
 	db := createConnection()
 
 	defer db.Close()
@@ -28,12 +27,12 @@ func InsertDeveloper(developerInput models.DeveloperInput) int64 {
 		developerInput.Password,
 		developerInput.TeamName,
 	).Scan(&id); err != nil {
-		log.Fatalf("Unable to insert new developer: %v", err)
+		return 0, fmt.Errorf("Unable to insert new developer: %v", err)
 	}
 
 	fmt.Printf("Inserted a single record with id: %v", id)
 
-	return id
+	return id, nil
 }
 
 func GetDeveloper(id int64) (models.Developer, error) {
@@ -51,19 +50,14 @@ func GetDeveloper(id int64) (models.Developer, error) {
 
 	row := db.QueryRow(sqlStatement, id)
 
-	err := row.Scan(&developer.ID, &developer.UserName, &developer.Password)
-
-	switch err {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-		return developer, nil
-	case nil:
-		return developer, nil
-	default:
-		log.Fatalf("Unable to scan the row: %v", err)
+	if err := row.Scan(&developer.ID, &developer.UserName, &developer.Password); err != nil {
+		if err == sql.ErrNoRows {
+			return developer, nil
+		}
+		return models.Developer{}, fmt.Errorf("Unable to scan the row: %v", err)
 	}
 
-	return developer, err
+	return developer, nil
 }
 
 func GetAllDevelopers() ([]models.Developer, error) {
@@ -81,7 +75,7 @@ func GetAllDevelopers() ([]models.Developer, error) {
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Fatalf("Unable to get all developers: %v", err)
+		return []models.Developer{}, fmt.Errorf("Unable to get all developers: %v", err)
 	}
 
 	defer rows.Close()
@@ -89,19 +83,17 @@ func GetAllDevelopers() ([]models.Developer, error) {
 	for rows.Next() {
 		var developer models.Developer
 
-		err = rows.Scan(&developer.ID, &developer.UserName, &developer.Password)
-
-		if err != nil {
-			log.Fatalf("Unable to scan the row: %v", err)
+		if err = rows.Scan(&developer.ID, &developer.UserName, &developer.Password); err != nil {
+			return []models.Developer{}, fmt.Errorf("Unable to scan the row: %v", err)
 		}
 
 		developers = append(developers, developer)
 	}
 
-	return developers, err
+	return developers, nil
 }
 
-func UpdateDeveloper(developer models.Developer) int64 {
+func UpdateDeveloper(developer models.Developer) (int64, error) {
 	db := createConnection()
 
 	defer db.Close()
@@ -118,21 +110,21 @@ func UpdateDeveloper(developer models.Developer) int64 {
 	res, err := db.Exec(sqlStatement, developer.ID, developer.UserName, developer.Password)
 
 	if err != nil {
-		log.Fatalf("Unable to update developer: %v", err)
+		return 0, fmt.Errorf("Unable to update developer: %v", err)
 	}
 
 	rowsAffected, err := res.RowsAffected()
 
 	if err != nil {
-		log.Fatalf("Error while checking the affected rows: %v", err)
+		return 0, fmt.Errorf("Error while checking the affected rows: %v", err)
 	}
 
 	fmt.Printf("Total rows/record affected %v", rowsAffected)
 
-	return rowsAffected
+	return rowsAffected, nil
 }
 
-func DeleteDeveloper(id int64) int64 {
+func DeleteDeveloper(id int64) (int64, error) {
 	db := createConnection()
 
 	defer db.Close()
@@ -142,16 +134,16 @@ func DeleteDeveloper(id int64) int64 {
 	res, err := db.Exec(sqlStatement, id)
 
 	if err != nil {
-		log.Fatalf("Unable to delete developer: %v", err)
+		return 0, fmt.Errorf("Unable to delete developer: %v", err)
 	}
 
 	rowsAffected, err := res.RowsAffected()
 
 	if err != nil {
-		log.Fatalf("Error while checking the affected rows: %v", err)
+		return 0, fmt.Errorf("Error while checking the affected rows: %v", err)
 	}
 
 	fmt.Printf("Total rows/record affected: %v", rowsAffected)
 
-	return rowsAffected
+	return rowsAffected, nil
 }
